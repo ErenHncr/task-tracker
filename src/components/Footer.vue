@@ -10,7 +10,8 @@
     color: #333;    
   }
   footer {
-    margin-top: 30px;
+    padding-top: 15px;
+    margin-top: auto;
     text-align: center;
   }
 </style>

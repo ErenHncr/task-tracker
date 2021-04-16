@@ -50,6 +50,8 @@ body {
   border: 1px solid steelblue;
   padding: 30px;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
 }
 .btn {
   display: inline-block;
