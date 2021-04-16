@@ -26,55 +26,34 @@ export default {
     }
   },
   methods: {
-    async addTask(newTask){
-       const res = await fetch('api/tasks', {
-         method: 'POST',
-         headers: {
-           'Content-Type': 'application/json',          
-         },
-          body: JSON.stringify(newTask),
-       });
-      const data = await res.json();
-      this.tasks = [...this.tasks, data];
+    fetchTasks(){
+      let allTasks = JSON.parse(localStorage.getItem('tasks'));
+      if(allTasks === null) {
+          allTasks = [];
+      }      
+      return allTasks;      
     },
-    async deleteTask(id){
+    addTask(newTask){
+      let oldTasks = this.fetchTasks();
+      localStorage.setItem('tasks', JSON.stringify([...oldTasks, newTask]));
+      this.tasks = [...this.tasks, newTask];
+    },
+    deleteTask(id){
       if(confirm('Are you sure?')){
-        const res = await fetch(`api/tasks/${id}`, {
-         method: 'DELETE',
-         headers: {
-           'Content-Type': 'application/json',          
-         },          
-       });
-      res.status === 200 
-        ? (this.tasks = this.tasks.filter((task)=> task.id !== id))
-        : alert('Error deleting task')
+        let allTasks = this.fetchTasks();              
+        allTasks = allTasks.filter((task)=> task.id !== id);
+        localStorage.setItem('tasks', JSON.stringify(allTasks));
       }
     },
-    async toggleReminder(id){
-      const taskToToggle = await this.fetchTask(id);
-      const updatedTask = {...taskToToggle, reminder: !taskToToggle.reminder};
-      const res = await fetch(`api/tasks/${id}`, {
-         method: 'PUT',
-         headers: {
-           'Content-Type': 'application/json',          
-         },
-         body: JSON.stringify(updatedTask),       
-       });      
-      const data = await res.json();      
-      this.tasks = this.tasks.map((task)=> task.id === id 
-      ? { ...task, reminder: data.reminder }
-      : task  );
+    toggleReminder(id){
+      const changeReminder = (task)=> task.id === id 
+      ? { ...task, reminder: !task.reminder }
+      : task;
+      let allTasks = this.fetchTasks();   
+      allTasks = allTasks.map(changeReminder);
+      localStorage.setItem('tasks', JSON.stringify(allTasks));
+      this.tasks = allTasks;
     },
-    async fetchTasks(){
-      const res = await fetch('api/tasks');
-      const data = await res.json();
-      return data;
-    },
-    async fetchTask(id){
-      const res = await fetch(`api/tasks/${id}`);
-      const data = await res.json();
-      return data;
-    }
   },
   async created(){
     this.tasks = await this.fetchTasks();
