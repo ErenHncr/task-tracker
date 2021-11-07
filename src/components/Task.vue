@@ -20,7 +20,7 @@ export default {
 
 <style scoped>
 .fas {
-  color: red;
+  color: #e9452f;
   padding: 6px;
 }
 .task {
@@ -30,7 +30,7 @@ export default {
   cursor: pointer;
 }
 .task.reminder {
-  border-left: 5px solid green;
+  border-left: 5px solid #15c786;
 }
 .task h3 {
   display: flex;
